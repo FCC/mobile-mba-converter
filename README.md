@@ -43,8 +43,8 @@ An example of what you would type on the command line is;
 ```java -jar mmba-jar-with-dependencies.jar C:\Samknows\data\json C:\Samknows ~ true true```
 
 
-#### **Problems** 
+#### **Problems**
+
 Some problems you might encounter in running the software are described below;
 - I get an error when running saying Java command not found or something like that.  This means you do not have Java installed.  Go to [this site](http://www.java.com) and follow the directions there to download and install java.
-- I get an error when running the software that reads `You need to provide at least the first two arguments delimited by space` - this means you didn't tell the software what the <sourceFolder> AND <destinationFolder> (or either one of them) where, or perhaps you mispelled the folder names.  Be sure you type the folder names correctly and that you have Measuring Mobile Broadband America Json files in that directory.
-- 
+- I get an error when running the software that reads `You need to provide at least the first two arguments delimited by space` - this means you didn't tell the software what the <sourceFolder> AND <destinationFolder> (or either one of them) where, or perhaps you mispelled the folder names.  Be sure you type the folder names correctly and that you have Measuring Mobile Broadband America Json files in that directory. 
