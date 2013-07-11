@@ -14,7 +14,7 @@
  
  1) Easiest - click the `Target` folder then click the `mmba-jar-with-dependencies.jar` file.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. cmd window for windows or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
  
- 2) Harder - Download the entire project from [github](https://github.com/fcc/mobile-mba-androidapp/archive/master.zip).  Use the directions below to compile and build the project.  If you choose this option you are a developer and want to understand the source code.  You also have familiarity with compiling java code, maven and compiling source projects in general.  If this sounds like greek go to option 1.
+ 2) Harder - Download the entire project from [github](https://github.com/FCC/mobile-mba-converter/archive/master.zip).  Use the directions below to compile and build the project.  If you choose this option you are a developer and want to understand the source code.  You also have familiarity with compiling java code, maven and compiling source projects in general.  If this sounds like greek go to option 1.
  
 
 ###  **Build the project**
