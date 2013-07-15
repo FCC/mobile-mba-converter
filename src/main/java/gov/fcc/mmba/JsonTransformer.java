@@ -54,13 +54,17 @@ public class JsonTransformer {
     private static String LOCATION_TYPE = "location";
     private static final String NULL = "\\N";
     private static final String NEW_LINE = "\n";
+    
+    private static final int LocationEntitiesUpperBound = 4;
+    private static final int GsmCellLocationEntitiesUpperBound = 3;
+    private static final int NetworkDataEntitiesUpperBound = 3;
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         if (args.length == 0) {
             System.out.print("Please specify the input folder with json files -> ");
             File sourcefolder = new File(scan.nextLine());
-            System.out.print("Please specify the output location folder for csv,json file  -> ");
+            System.out.print("Please specify the output location folder for the csv and/or json file -> ");
             String destination = scan.nextLine();
             System.out.print(String.format("Please specify the delimiter for csv file (default is '%s') -> ", DELIMITER));
             String delimiter = scan.nextLine();
@@ -93,7 +97,7 @@ public class JsonTransformer {
                 long timeTaken = System.currentTimeMillis() - startTime;
                 System.out.println("Processing time taken -> " + timeTaken);
             } else {
-                System.out.println("You need to provider atleast first two arguments delimited by space");
+                System.out.println("You need to provide at least first two arguments delimited by space");
                 System.out.println("Here is the arguments list");
                 System.out
                         .println("input folder location, output folder location, delimiter(optional), concatenate json files(optional - true/false*), format(optional - true/false*");
@@ -112,6 +116,8 @@ public class JsonTransformer {
             Writer bwcsv = new BufferedWriter(new FileWriter(csvDestinationFile), 8 * 1024);
             Writer bwjson = new BufferedWriter(new FileWriter(jsonDestinationFile), 8 * 1024);
 
+            bwcsv.write(getCSVHeaders() + NEW_LINE);
+            
             File[] files = source.listFiles();
             for (final File fileEntry : files) {
                 String json = "";
@@ -299,7 +305,7 @@ public class JsonTransformer {
                 }
             }
         }
-        for (; size < 4; size++) {
+        for (; size < LocationEntitiesUpperBound; size++) {
             appendNull(sb, 5);
         }
     }
@@ -321,7 +327,7 @@ public class JsonTransformer {
                 }
             }
         }
-        for (; size < 3; size++) {
+        for (; size < GsmCellLocationEntitiesUpperBound; size++) {
             appendNull(sb, 6);
         }
     }
@@ -350,7 +356,7 @@ public class JsonTransformer {
                 }
             }
         }
-        for (; size < 3; size++) {
+        for (; size < NetworkDataEntitiesUpperBound; size++) {
             appendNull(sb, 13);
         }
 
@@ -402,6 +408,144 @@ public class JsonTransformer {
         } else {
             appendNull(sb, 10);
         }
+    }
+    
+    private static String getCSVHeaders() {
+		StringBuilder sb = new StringBuilder();
+		
+		append(sb, "filename");
+	    getBasicInformationHeaders(sb);
+	    getConditionsHeaders(sb);
+	    getMetricsHeaders(sb);
+	    getTestsHeaders(sb);
+	    
+	    String output = sb.toString();
+	    int length = output.length();
+	    return output.substring(0, length - 1);
+	}
+
+	private static void getBasicInformationHeaders(StringBuilder sb) {
+		append(sb, "timestamp");
+	    append(sb,"schedule_config_version");
+	    append(sb,"app_version_code");
+	    append(sb,"sim_operator_code");
+	    append(sb,"enterprise_id");
+	    append(sb,"app_version_name");
+	    append(sb,"submission_type");
+	    append(sb,"_sourceip");
+	}
+
+	private static void getConditionsHeaders(StringBuilder sb) {
+		getParamExpiredHeaders(sb);
+		getNetActivityHeaders(sb);
+		getCpuActivityHeaders(sb);
+	}
+
+	private static void getMetricsHeaders(StringBuilder sb) {
+		getPhoneIdentityHeaders(sb);
+		getNetworkDataHeaders(sb);
+		getGsmCellLocationHeaders(sb);
+		getLocationHeaders(sb);
+	}
+
+	private static void getTestsHeaders(StringBuilder sb) {
+		getGetOrPostHeaders(sb);
+		getGetOrPostHeaders(sb);
+		getLatencyHeaders(sb);
+	}
+
+	private static void getParamExpiredHeaders(StringBuilder sb) {
+		append(sb, "timestamp");
+		append(sb, "success");
+	}
+
+	private static void getNetActivityHeaders(StringBuilder sb) {
+		append(sb, "timestamp");
+		append(sb, "success");
+		append(sb, "bytesin");
+		append(sb, "maxbytesin");
+		append(sb, "bytesout");
+		append(sb, "maxbytesout");
+	}
+
+	private static void getCpuActivityHeaders(StringBuilder sb) {
+		append(sb, "timestamp");
+		append(sb, "success");
+		append(sb, "max_average");
+		append(sb, "read_average");
+	}
+
+	private static void getGsmCellLocationHeaders(StringBuilder sb) {
+		for (int i = 0; i < GsmCellLocationEntitiesUpperBound; i++) {
+			append(sb, "timestamp");
+			append(sb, "umts_psc");
+			append(sb, "signal_strength");
+			append(sb, "location_area_code");
+			append(sb, "bit_error_rate");
+			append(sb, "cell_tower_id");
+		}
+	}
+
+	private static void getNetworkDataHeaders(StringBuilder sb) {
+		for (int i = 0; i < NetworkDataEntitiesUpperBound; i++) {
+			append(sb, "timestamp");
+			append(sb, "phone_type");
+			append(sb, "phone_type_code");
+			append(sb, "sim_operator_code");
+			append(sb, "connected");
+			append(sb, "active_network_type_code");
+			append(sb, "network_type_code");
+			append(sb, "network_type");
+			append(sb, "network_operator_name");
+			append(sb, "active_network_type");
+			append(sb, "network_operator_code");
+			append(sb, "sim_operator_name");
+			append(sb, "roaming");
+		}
+	}
+
+	private static void getLocationHeaders(StringBuilder sb) {
+		for (int i = 0; i < LocationEntitiesUpperBound; i++) {
+			append(sb, "timestamp");
+			append(sb, "longitude");
+			append(sb, "latitude");
+			append(sb, "location_type");
+			append(sb, "accuracy");
+		}
+	}
+
+	private static void getPhoneIdentityHeaders(StringBuilder sb) {
+		append(sb, "timestamp");
+		append(sb, "model");
+		append(sb, "manufacturer");
+		append(sb, "os_version");
+		append(sb, "os_type");
+	}
+
+	private static void getLatencyHeaders(StringBuilder sb) {
+		append(sb,  "timestamp");
+	    append(sb, "success");
+	    append(sb, "rtt_avg");
+	    append(sb, "rtt_min");
+	    append(sb, "rtt_max");
+	    append(sb, "rtt_stddev");
+	    append(sb, "received_packets");
+	    append(sb, "lost_packets");
+	    append(sb, "target");
+	    append(sb, "target_ipaddress");
+	}
+
+	private static void getGetOrPostHeaders(StringBuilder sb) {
+    	append(sb,  "timestamp");
+        append(sb, "success");
+        append(sb, "number_of_threads");
+        append(sb, "warmup_bytes");
+        append(sb, "warmup_time");
+        append(sb, "transfer_bytes");
+        append(sb, "transfer_time");
+        append(sb, "bytes_sec");
+        append(sb, "target");
+        append(sb, "target_ipaddress");
     }
 
     private static void append(StringBuilder sb, Object obj) {
