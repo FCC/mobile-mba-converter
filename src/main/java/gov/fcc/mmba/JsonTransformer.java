@@ -38,7 +38,7 @@ public class JsonTransformer {
     private static final List<String> ARRAY_ELEMENTS = Arrays.asList(new String[] { "conditions", "metrics", "tests" });
     private static final List<String> NEW_ARRAY_ELEMENTS = Arrays.asList(new String[] { "cdma_cell_location", "last_known_location", "location",
             "network_data", "gsm_cell_location" });
-    private static String DELIMITER = "~";
+    private static String DELIMITER = ",";
     private static boolean CONVERT_TO_JSON_FLAG = false;
     private static boolean FORMAT_JSON_FLAG = false;
     private static final String TYPE = "type";
@@ -62,18 +62,18 @@ public class JsonTransformer {
             File sourcefolder = new File(scan.nextLine());
             System.out.print("Please specify the output location folder for csv,json file  -> ");
             String destination = scan.nextLine();
-            System.out.print("Please specify the delimiter for csv file (default is '~') -> ");
+            System.out.print(String.format("Please specify the delimiter for csv file (default is '%s') -> ", DELIMITER));
             String delimiter = scan.nextLine();
             if (!delimiter.trim().isEmpty())
                 DELIMITER = delimiter;
-            System.out.print("Would you like to restructure json files into one json file (defaulted to false) -> ");
+            System.out.print(String.format("Would you like to restructure json files into one json file (defaulted to %s) -> ", (CONVERT_TO_JSON_FLAG) ? "YES" : "NO"));
             String convert = scan.nextLine();
             if (!convert.trim().isEmpty())
-                CONVERT_TO_JSON_FLAG = Boolean.valueOf(convert);
-            System.out.print("Would you like to format restructed json file (defaulted to false) -> ");
+                CONVERT_TO_JSON_FLAG = checkYesNo(convert);
+            System.out.print(String.format("Would you like to format restructed json file (defaulted to %s) -> ", (FORMAT_JSON_FLAG) ? "YES" : "NO" ));
             String format = scan.nextLine();
             if (!convert.trim().isEmpty())
-                FORMAT_JSON_FLAG = Boolean.valueOf(format);
+                FORMAT_JSON_FLAG = checkYesNo(format);
             long startTime = System.currentTimeMillis();
             convert(sourcefolder, destination);
             long timeTaken = System.currentTimeMillis() - startTime;
@@ -98,13 +98,16 @@ public class JsonTransformer {
                 System.out
                         .println("input folder location, output folder location, delimiter(optional), concatenate json files(optional - true/false*), format(optional - true/false*");
             }
+            scan.close();
         }
     }
 
     private static void convert(File source, String destination) {
         try {
-            File csvDestinationFile = new File(destination + "\\samknows." + System.currentTimeMillis() + ".csv");
-            File jsonDestinationFile = new File(destination + "\\samknows." + System.currentTimeMillis() + ".json");
+        	new File(destination).mkdir();
+        	
+            File csvDestinationFile = new File(destination + File.separatorChar + "samknows." + System.currentTimeMillis() + ".csv");
+            File jsonDestinationFile = new File(destination + File.separatorChar + "samknows." + System.currentTimeMillis() + ".json");
 
             Writer bwcsv = new BufferedWriter(new FileWriter(csvDestinationFile), 8 * 1024);
             Writer bwjson = new BufferedWriter(new FileWriter(jsonDestinationFile), 8 * 1024);
@@ -127,6 +130,9 @@ public class JsonTransformer {
                                 } else {
                                     bwjson.write(json + NEW_LINE);
                                 }
+                            }
+                            else {
+                            	jsonDestinationFile.deleteOnExit();
                             }
                         }
                     }
@@ -434,5 +440,17 @@ public class JsonTransformer {
     private static void appendNull(StringBuilder sb, int numOfFields) {
         for (int i = 0; i < numOfFields; i++)
             sb.append(NULL).append(DELIMITER);
+    }
+    
+    /* http://www.javaprogrammingforums.com/java-programming-tutorials/9391-valid-user-input.html */
+    private static boolean checkYesNo(String checking) {
+    	String input = checking.toLowerCase().trim();
+    	if (input.equals("yes") || input.equals("y")) {
+    		return true;
+    	}
+    	//Behavioural: only a discrete 'yes' will return true.
+    	//It does not recurse on invalid input because incorrect input
+    	//is logically identical to the non-destructive 'no'
+    	return false;
     }
 }
