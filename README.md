@@ -12,7 +12,7 @@ Users must compile (or build) the source code on their installation prior to run
 ### **Getting started**
  Download the program from [gitHub](https://github.com/fcc/mobile-mba-androidapp/tree/master/JsonTransformer).  There are two options for download.
  
- 1) Easiest - click the `Target` folder then right-click the `mmba-jar-with-dependencies.jar` file and select `Save link as` or `Save target as`, depending on your Internet browser.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. UNIX shell, cmd window for windows, or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
+ 1) Easiest - click the `Target` folder, then click the `mmba-jar-with-dependencies.jar` file, and then click `View Raw`.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. UNIX shell, cmd window for windows, or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
  
  2) Harder - Download the entire project from [github](https://github.com/FCC/mobile-mba-converter/archive/master.zip).  Use the directions below to compile and build the project.  If you choose this option you are a developer and want to understand the source code.  You also have familiarity with compiling java code, maven and compiling source projects in general.  If this sounds like greek go to option 1.
  
