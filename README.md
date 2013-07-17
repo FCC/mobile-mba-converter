@@ -1,8 +1,8 @@
 ### MMBA Project - JSON To CSV Transformer
   
-  This simple tool is built to convert raw FCC/SamKnows Speed tests to a single file (eg JSON and CSV). The inputs for this tool is a source folder containing any number of raw speed test json files.  The results from this tool is a single CSV file ready to be read into any SQL style database AND a single JSON format to be read into a noSQL style database.  This tool runs at a command line using the computer's java installation. 
-  
-  Users must compile (or build) the source code on their installation prior to running with the instructions below (see Build the project).
+This simple tool converts raw JSON formatted test results collected by the FCC Mobile Speed Test Application to a single file (eg JSON and CSV). The tool takes as input JSON formated results in files stored in a source folder, and exports a single CSV file ready to be read into any SQL style database AND a single JSON format to be read into a noSQL style database (such as Hadoop). This tool runs at a command line using the computer's java installation.
+
+Users must compile (or build) the source code on their installation prior to running with the instructions below (see Build the project).
 
 ### **Pre-requisites**
 - A source folder containing all the input Measuring Mobile Broadband America files to be converted;
@@ -12,7 +12,7 @@
 ### **Getting started**
  Download the program from [gitHub](https://github.com/fcc/mobile-mba-androidapp/tree/master/JsonTransformer).  There are two options for download.
  
- 1) Easiest - click the `Target` folder then click the `mmba-jar-with-dependencies.jar` file.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. cmd window for windows or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
+ 1) Easiest - click the `Target` folder, then click the `mmba-jar-with-dependencies.jar` file, and then click `View Raw`.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. UNIX shell, cmd window for windows, or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
  
  2) Harder - Download the entire project from [github](https://github.com/FCC/mobile-mba-converter/archive/master.zip).  Use the directions below to compile and build the project.  If you choose this option you are a developer and want to understand the source code.  You also have familiarity with compiling java code, maven and compiling source projects in general.  If this sounds like greek go to option 1.
  
@@ -40,11 +40,11 @@ This software runs from your command line.  If you are not familiar with the com
 <formatJsonFlag> is an optional argument.  You can either enter true or false to format the Json file.  The default is `true`.
 
 An example of what you would type on the command line is;
-```java -jar mmba-jar-with-dependencies.jar C:\Samknows\data\json C:\Samknows ~ true true```
+```java -jar mmba-jar-with-dependencies.jar C:\mMBA\data\json C:\mMBA ~ true true```
 
 
 #### **Problems**
 
-Some problems you might encounter in running the software are described below;
+Some problems you might encounter in running the software are described below:
 - I get an error when running saying Java command not found or something like that.  This means you do not have Java installed.  Go to [this site](http://www.java.com) and follow the directions there to download and install java.
 - I get an error when running the software that reads `You need to provide at least the first two arguments delimited by space` - this means you didn't tell the software what the <sourceFolder> AND <destinationFolder> (or either one of them) where, or perhaps you mispelled the folder names.  Be sure you type the folder names correctly and that you have Measuring Mobile Broadband America Json files in that directory. 
