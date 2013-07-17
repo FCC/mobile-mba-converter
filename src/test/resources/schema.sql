@@ -134,4 +134,5 @@ CREATE TABLE mba.staging_data
   latency_lost_packets numeric(20,0),
   latency_target character varying(100),
   latency_target_ipaddress character varying(23));
-copy mba.staging_data from 'C:/Samknows/samknows.csv' with delimiter '~';  
+  
+copy bbmap.staging_data from 'C:/mmba/samknows.csv' with (delimiter '~', header true, format csv , NULL '\N');  
