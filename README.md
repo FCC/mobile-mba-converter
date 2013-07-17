@@ -1,6 +1,6 @@
 ### MMBA Project - JSON To CSV Transformer
   
-This simple tool converts raw JSON formatted test results collected by the FCC Mobile Speed Test Application to a single file (eg JSON and CSV). The tool takes as input JSON formated results in files stored in a source folder, and exports a single CSV file ready to be read into any SQL style database AND a single JSON format to be read into a noSQL style database (such as Hadoop). This tool runs at a command line using the computer's java installation.
+This simple tool converts raw JSON formatted test results collected by the FCC Mobile Speed Test Application to a single file (eg JSON and CSV). The tool takes as input JSON formated results in files stored in a source folder, and exports a single CSV file ready to be read into any SQL style database AND a single JSON format to be read into a NoSQL style database (such as MongoDB). This tool runs at a command line using the computer's java installation.
 
 Users must compile (or build) the source code on their installation prior to running with the instructions below (see Build the project).
 
@@ -10,7 +10,7 @@ Users must compile (or build) the source code on their installation prior to run
 - Maven must be set in the classpath prior to running.  You only need this if you are attempting to compile the code yourself.
 
 ### **Getting started**
- Download the program from [gitHub](https://github.com/fcc/mobile-mba-androidapp/tree/master/JsonTransformer).  There are two options for download.
+ Download the program from [gitHub](https://github.com/FCC/mobile-mba-converter).  There are two options for download.
  
  1) Easiest - click the `Target` folder, then click the `mmba-jar-with-dependencies.jar` file, and then click `View Raw`.  This will save the pre-compiled version to your location machine.  From your computer's command line (e.g. UNIX shell, cmd window for windows, or terminal window from a mac) navigate to the directory where you stored this file and follow the instructions below.
  
