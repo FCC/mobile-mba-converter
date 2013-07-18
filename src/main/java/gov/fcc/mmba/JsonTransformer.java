@@ -38,7 +38,8 @@ public class JsonTransformer {
     private static final List<String> ARRAY_ELEMENTS = Arrays.asList(new String[] { "conditions", "metrics", "tests" });
     private static final List<String> NEW_ARRAY_ELEMENTS = Arrays.asList(new String[] { "cdma_cell_location", "last_known_location", "location",
             "network_data", "gsm_cell_location" });
-    private static String DELIMITER = ",";
+    private static String FIELD_DELIMITER = ","; // Character that separates the entries of the CSV file
+    private static String TEXT_DELIMITER = ""; // Character that surrounds the text. No character by default for easier SQL import.
     private static boolean CONVERT_TO_JSON_FLAG = false;
     private static boolean FORMAT_JSON_FLAG = false;
     private static final String TYPE = "type";
@@ -51,6 +52,7 @@ public class JsonTransformer {
     private static String PHONE_IDENTITY_TYPE = "phone_identity";
     private static String NETWORK_DATA_TYPE = "network_data";
     private static String GSM_CELL_LOCATION_TYPE = "gsm_cell_location";
+    private static String CDMA_CELL_LOCATION_TYPE = "cdma_cell_location";
     private static String LOCATION_TYPE = "location";
     private static final String NULL = "\\N";
     private static final String NEW_LINE = "\n";
@@ -66,10 +68,10 @@ public class JsonTransformer {
             File sourcefolder = new File(scan.nextLine());
             System.out.print("Please specify the output location folder for the csv and/or json file -> ");
             String destination = scan.nextLine();
-            System.out.print(String.format("Please specify the delimiter for csv file (default is '%s') -> ", DELIMITER));
+            System.out.print(String.format("Please specify the delimiter for csv file (default is '%s') -> ", FIELD_DELIMITER));
             String delimiter = scan.nextLine();
             if (!delimiter.trim().isEmpty())
-                DELIMITER = delimiter;
+                FIELD_DELIMITER = delimiter;
             System.out.print(String.format("Would you like to restructure json files into one json file (defaulted to %s) -> ", (CONVERT_TO_JSON_FLAG) ? "YES" : "NO"));
             String convert = scan.nextLine();
             if (!convert.trim().isEmpty())
@@ -87,7 +89,7 @@ public class JsonTransformer {
                 File sourcefolder = new File(args[0]);
                 String destination = args[1];
                 if (args.length > 2)
-                    DELIMITER = args[2];
+                    FIELD_DELIMITER = args[2];
                 if (args.length > 3)
                     CONVERT_TO_JSON_FLAG = Boolean.valueOf(args[3]);
                 if (args.length > 4)
@@ -476,41 +478,41 @@ public class JsonTransformer {
 	}
 
 	private static void getGsmCellLocationHeaders(StringBuilder sb) {
-		for (int i = 0; i < GsmCellLocationEntitiesUpperBound; i++) {
-			append(sb, "timestamp");
-			append(sb, "umts_psc");
-			append(sb, "signal_strength");
-			append(sb, "location_area_code");
-			append(sb, "bit_error_rate");
-			append(sb, "cell_tower_id");
+		for (int i = 1; i < GsmCellLocationEntitiesUpperBound+1; i++) {
+			append(sb, String.format("timestamp_%d", i));
+			append(sb, String.format("umts_psc_%d", i));
+			append(sb, String.format("signal_strength_%d", i));
+			append(sb, String.format("location_area_code_%d", i));
+			append(sb, String.format("bit_error_rate_%d", i));
+			append(sb, String.format("cell_tower_id_%d", i));
 		}
 	}
 
 	private static void getNetworkDataHeaders(StringBuilder sb) {
-		for (int i = 0; i < NetworkDataEntitiesUpperBound; i++) {
-			append(sb, "timestamp");
-			append(sb, "phone_type");
-			append(sb, "phone_type_code");
-			append(sb, "sim_operator_code");
-			append(sb, "connected");
-			append(sb, "active_network_type_code");
-			append(sb, "network_type_code");
-			append(sb, "network_type");
-			append(sb, "network_operator_name");
-			append(sb, "active_network_type");
-			append(sb, "network_operator_code");
-			append(sb, "sim_operator_name");
-			append(sb, "roaming");
+		for (int i = 1; i < NetworkDataEntitiesUpperBound+1; i++) {
+			append(sb, String.format("timestamp_%d", i));
+			append(sb, String.format("phone_type_%d", i));
+			append(sb, String.format("phone_type_code_%d", i));
+			append(sb, String.format("sim_operator_code_%d", i));
+			append(sb, String.format("connected_%d", i));
+			append(sb, String.format("active_network_type_code_%d", i));
+			append(sb, String.format("network_type_code_%d", i));
+			append(sb, String.format("network_type_%d", i));
+			append(sb, String.format("network_operator_name_%d", i));
+			append(sb, String.format("active_network_type_%d", i));
+			append(sb, String.format("network_operator_code_%d", i));
+			append(sb, String.format("sim_operator_name_%d", i));
+			append(sb, String.format("roaming_%d", i));
 		}
 	}
 
 	private static void getLocationHeaders(StringBuilder sb) {
-		for (int i = 0; i < LocationEntitiesUpperBound; i++) {
-			append(sb, "timestamp");
-			append(sb, "longitude");
-			append(sb, "latitude");
-			append(sb, "location_type");
-			append(sb, "accuracy");
+		for (int i = 1; i < LocationEntitiesUpperBound+1; i++) {
+			append(sb, String.format("timestamp_%d", i));
+			append(sb, String.format("longitude_%d", i));
+			append(sb, String.format("latitude_%d", i));
+			append(sb, String.format("location_type_%d", i));
+			append(sb, String.format("accuracy_%d", i));
 		}
 	}
 
@@ -549,26 +551,26 @@ public class JsonTransformer {
     }
 
     private static void append(StringBuilder sb, Object obj) {
-        sb.append(obj).append(DELIMITER);
+        sb.append(TEXT_DELIMITER).append(obj).append(TEXT_DELIMITER).append(FIELD_DELIMITER);
     }
 
     private static void appendString(StringBuilder sb, JsonElement obj) {
         if (obj == null || obj instanceof JsonNull)
             appendNull(sb, 1);
         else
-            sb.append(obj.getAsString()).append(DELIMITER);
+            sb.append(TEXT_DELIMITER).append(obj.getAsString()).append(TEXT_DELIMITER).append(FIELD_DELIMITER);
     }
 
     private static void appendBigDecimal(StringBuilder sb, JsonElement obj) {
         if (obj != null)
-            sb.append(obj.getAsBigDecimal()).append(DELIMITER);
+            sb.append(TEXT_DELIMITER).append(obj.getAsBigDecimal()).append(TEXT_DELIMITER).append(FIELD_DELIMITER);
         else
             appendNull(sb, 1);
     }
 
     private static void appendBoolean(StringBuilder sb, JsonElement obj) {
         if (obj != null)
-            sb.append(obj.getAsBoolean()).append(DELIMITER);
+            sb.append(TEXT_DELIMITER).append(obj.getAsBoolean()).append(TEXT_DELIMITER).append(FIELD_DELIMITER);
         else
             appendNull(sb, 1);
     }
@@ -583,7 +585,7 @@ public class JsonTransformer {
 
     private static void appendNull(StringBuilder sb, int numOfFields) {
         for (int i = 0; i < numOfFields; i++)
-            sb.append(NULL).append(DELIMITER);
+            sb.append(TEXT_DELIMITER).append(NULL).append(TEXT_DELIMITER).append(FIELD_DELIMITER);
     }
     
     /* http://www.javaprogrammingforums.com/java-programming-tutorials/9391-valid-user-input.html */
