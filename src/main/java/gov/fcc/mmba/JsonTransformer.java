@@ -60,6 +60,7 @@ public class JsonTransformer {
     private static final int LocationEntitiesUpperBound = 4;
     private static final int GsmCellLocationEntitiesUpperBound = 3;
     private static final int NetworkDataEntitiesUpperBound = 3;
+	private static final int CdmaCellLocationEntitiesUpperBound = 3;
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
@@ -248,6 +249,7 @@ public class JsonTransformer {
         extractPhoneIdentity((JsonObject) metrics.get(PHONE_IDENTITY_TYPE), sb);
         extractNetworkData(metrics.getAsJsonArray(NETWORK_DATA_TYPE), sb);
         extractGsmCellLocation(metrics.getAsJsonArray(GSM_CELL_LOCATION_TYPE), sb);
+        extractCdmaCellLocation(metrics.getAsJsonArray(CDMA_CELL_LOCATION_TYPE), sb);
         extractLocation(metrics.getAsJsonArray(LOCATION_TYPE), sb);
     }
 
@@ -326,6 +328,30 @@ public class JsonTransformer {
                     appendBigDecimal(sb, json.get("location_area_code"));
                     appendBigDecimal(sb, json.get("bit_error_rate"));
                     appendString(sb, json.get("cell_tower_id"));
+                }
+            }
+        }
+        for (; size < GsmCellLocationEntitiesUpperBound; size++) {
+            appendNull(sb, 6);
+        }
+    }
+    
+    private static void extractCdmaCellLocation(JsonArray array, StringBuilder sb) {
+        int size = 0;
+        if (array != null) {
+            Iterator<JsonElement> it = array.iterator();
+            size = array.size();
+            while (it.hasNext()) {
+                JsonObject json = (JsonObject) it.next();
+                if (json != null) {
+                    appendTimeStamp(sb, json);
+                    appendString(sb, json.get("network_id"));
+                    appendBigDecimal(sb, json.get("base_station_longitude"));
+                    appendBigDecimal(sb, json.get("base_station_latitude"));
+                    appendBigDecimal(sb, json.get("ecio"));
+                    appendBigDecimal(sb, json.get("dbm"));
+                    appendString(sb, json.get("system_id"));
+                    appendString(sb, json.get("base_station_id"));
                 }
             }
         }
@@ -447,6 +473,7 @@ public class JsonTransformer {
 		getPhoneIdentityHeaders(sb);
 		getNetworkDataHeaders(sb);
 		getGsmCellLocationHeaders(sb);
+		getCdmaCellLocationHeaders(sb);
 		getLocationHeaders(sb);
 	}
 
@@ -485,6 +512,19 @@ public class JsonTransformer {
 			append(sb, String.format("location_area_code_%d", i));
 			append(sb, String.format("bit_error_rate_%d", i));
 			append(sb, String.format("cell_tower_id_%d", i));
+		}
+	}
+	
+	private static void getCdmaCellLocationHeaders(StringBuilder sb) {
+		for (int i = 1; i < CdmaCellLocationEntitiesUpperBound+1; i++) {
+			append(sb, String.format("timestamp_%d", i));
+            append(sb, String.format("network_id_%d", i));
+            append(sb, String.format("base_station_longitude_%d", i));
+            append(sb, String.format("base_station_latitude_%d", i));
+            append(sb, String.format("ecio_%d", i));
+            append(sb, String.format("dbm_%d", i));
+            append(sb, String.format("system_id_%d", i));
+            append(sb, String.format("base_station_id_%d", i));
 		}
 	}
 
