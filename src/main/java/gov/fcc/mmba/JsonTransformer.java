@@ -103,7 +103,7 @@ public class JsonTransformer {
                 System.out.println("You need to provide at least first two arguments delimited by space");
                 System.out.println("Here is the arguments list");
                 System.out
-                        .println("input folder location, output folder location, delimiter(optional), concatenate json files(optional - true/false*), format(optional - true/false*");
+                        .println("input folder location, output folder location, delimiter(optional), concatenate json files(optional - yes/no*), format(optional - yes/no*)");
             }
             scan.close();
         }
@@ -355,8 +355,8 @@ public class JsonTransformer {
                 }
             }
         }
-        for (; size < GsmCellLocationEntitiesUpperBound; size++) {
-            appendNull(sb, 6);
+        for (; size < CdmaCellLocationEntitiesUpperBound; size++) {
+            appendNull(sb, 8);
         }
     }
 
